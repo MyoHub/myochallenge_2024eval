@@ -53,10 +53,12 @@ class Environment(evaluation_pb2_grpc.EnvironmentServicer):
         self.repetition = 0
 
     def reset(self, request, context):
+        reset_dict = unpack_for_grpc(request.SerializedEntity)
+
         self.score = 0
         self.iter = 0
         self.repetition += 1
-        message = pack_for_grpc(env.reset())
+        message = pack_for_grpc(env.reset(reset_dict=reset_dict))
         env.feedback = []
         return evaluation_pb2.Package(SerializedEntity=message)
 

@@ -79,6 +79,18 @@ class RemoteConnection():
             obsvec = np.concatenate([obsvec, obs_dict[key].ravel()]) # ravel helps with images
         return obsvec
 
+class LocoRemoteConnection(RemoteConnection):
+
+    def __init__(self, str_connection):
+        super().__init__(str_connection)
+
+    def reset(self, reset_dict=None):
+        obs = self.unpack_for_grpc(
+            self.stub.reset(
+                evaluation_pb2.Package(SerializedEntity=self.pack_for_grpc(reset_dict))
+            ).SerializedEntity
+            )
+        return obs
 
 class DummyLocoEnv:
     def __init__(self, env_name, stub):

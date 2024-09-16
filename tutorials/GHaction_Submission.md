@@ -11,12 +11,12 @@ so you don't have to mess around with docker containers.
 
 ### On the eval-ai website
 - [Create an account for eval-ai and a team](https://evalai.readthedocs.io/en/latest/participate.html)
-- Head to the MyoChallenge2023 and click on participate. You can now see in the participate area (or in your evalai account settings) your `personal token`. This token will be needed so that the github repo can submit solutions in your name.
+- Head to the MyoChallenge2024 and click on participate. You can now see in the participate area (or in your evalai account settings) your `personal token`. This token will be needed so that the github repo can submit solutions in your name.
 
 ![MyoChal_EvalAI_setup](../images/MyoChal_EvalAI_setup.png)
 
 ### Clone this repo
-In order for your code to stay private, you can [create a repository from our template](https://github.com/new?template_name=myochallenge_2023eval&template_owner=MyoHub) by looking at the top of this repository and click on "Use this template" -> "Create your own repository" and then choosing the private option.
+In order for your code to stay private, you can [create a repository from our template](https://github.com/new?template_name=myochallenge_2024eval&template_owner=MyoHub) by looking at the top of this repository and click on "Use this template" -> "Create your own repository" and then choosing the private option.
 
   | ![MyoChal_CreateTemplate](../images/MyoChal_CreateTemplate.png) |
   |-|
