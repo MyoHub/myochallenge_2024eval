@@ -30,7 +30,7 @@ Navigate to the new personal github repository that you created from the templat
   |-|-|
   Navigate to repository secret page | Enter your EvalAI access token here
 
-- click on "Actions" in the top-bar of your repo, and you will see the github-actions we prepared. You can use "Docker Build Test" [Loco](https://github.com/MyoHub/myochallenge_2023eval/actions/workflows/docker-build_loco.yml) or [Mani](https://github.com/MyoHub/myochallenge_2023eval/actions/workflows/docker-build_mani.yml) to test building docker containers for random agents.
+- click on "Actions" in the top-bar of your repo, and you will see the github-actions we prepared. You can use "Docker Build Test" [Loco](https://github.com/MyoHub/myochallenge_2024eval/actions/workflows/docker-build_loco.yml) or [Mani](https://github.com/MyoHub/myochallenge_2024eval/actions/workflows/docker-build_mani.yml) to test building docker containers for random agents.
 
   | ![MyoChal_Submit_Workflow_1](../images/MyoChal_Submit_Workflow_1.png) |
   |-|
@@ -38,6 +38,6 @@ Navigate to the new personal github repository that you created from the templat
 
 - If you want to submit something, you can use "Submission Loco Deprl" or similar for Mani and for random agents. Try clicking on one of them and then on "Run workflow" on the right. This should show up as a private submission in your evalai leaderboard.
 
-You can then edit the prepared files for [deprl](https://github.com/MyoHub/myochallenge_2023eval/blob/main/agent/agent_loco_deprl.py) or [random](https://github.com/MyoHub/myochallenge_2023eval/blob/main/agent/agent_loco_random.py) agents and use them to import your own policies. They also contain other helpful functions.
+You can then edit the prepared files for [deprl](https://github.com/MyoHub/myochallenge_2024eval/blob/main/agent/agent_loco_deprl.py) or [random](https://github.com/MyoHub/myochallenge_2024eval/blob/main/agent/agent_loco_random.py) agents and use them to import your own policies. They also contain other helpful functions.
 
 Pushing your changes and policies to the `main` branch will allow to submit them via the github actions. For local development, we recommend to follow the DIY submission [instructions](./DIY_Submission.md).

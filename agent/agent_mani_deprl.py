@@ -14,14 +14,17 @@ def get_custom_observation(rc):
     """
     # example of obs_keys for deprl baseline
     obs_keys = [
-            'hand_qpos',
-            'hand_qvel',
-            'obj_pos',
+            'myohand_qpos',
+            'myohand_qvel',
+            'pros_hand_qpos',
+            'pros_hand_qvel',
+            'object_qpos',
+            'object_qvel',
+            'start_pos',
             'goal_pos',
-            'pos_err',
-            'obj_rot',
-            'goal_rot',
-            'rot_err'
+            'obj_pos',
+            'reach_err',
+            'pass_err',
     ]
     obs_keys.append('act')
 
@@ -53,8 +56,8 @@ rc.set_observation_space(shape)
 ## HERE an example from a previously trained policy with deprl is shown (see https://github.com/facebookresearch/myosuite/blob/main/docs/source/tutorials/4a_deprl.ipynb)
 ## additional dependencies such as gym and deprl might be needed
 import deprl
-policy = deprl.load_baseline(DummyEnv(env_name='myoChallengeRelocateP1-v0', stub=rc))
-print('Relocate agent: policy loaded')
+policy = deprl.load_baseline(DummyEnv(env_name='myoChallengeBimanual-v0', stub=rc))
+print('MANI-MPL agent: policy loaded')
 ################################################
 
 
@@ -68,7 +71,7 @@ while not flag_completed:
     while not flag_trial :
 
         if counter == 0:
-            print('Relocate: Trial #'+str(repetition)+'Start Resetting the environment and get 1st obs')
+            print('MANI-MPL: Trial #'+str(repetition)+'Start Resetting the environment and get 1st obs')
             obs = rc.reset()
 
         ################################################
@@ -84,6 +87,6 @@ while not flag_completed:
         flag_trial = base["feedback"][2]
         flag_completed = base["eval_completed"]
 
-        print(f"Relocate: Agent Feedback iter {counter} -- trial solved: {flag_trial} -- task solved: {flag_completed}")
+        print(f"MANI-MPL: Agent Feedback iter {counter} -- trial solved: {flag_trial} -- task solved: {flag_completed}")
         print("*" * 100)
         counter +=1

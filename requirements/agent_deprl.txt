@@ -1,9 +1,11 @@
 grpcio==1.47.0
 grpcio-tools==1.47.0
 protobuf==3.20.*
+gymnasium
 numpy
 matplotlib
 tabulate
+pink-noise-rl
 
 deprl==0.1.7.1
 

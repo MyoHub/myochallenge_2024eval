@@ -20,7 +20,7 @@ This deprl-baseline will try to lift the cube upwards.
 import gym
 import myosuite, deprl
 
-env = gym.make('myoChallengeRelocateP1-v0')
+env = gym.make('myoChallengeBimanual-v0')
 policy = deprl.load_baseline(env)
 
 for ep in range(5):
@@ -44,7 +44,7 @@ This deprl-baseline will try to stand around and slowly move across the quad.
 import gym
 import myosuite, deprl
 
-env = gym.make('myoChallengeChaseTagP1-v0')
+env = gym.make('myoChallengeRunTrackP2-v0')
 policy = deprl.load_baseline(env)
 
 for ep in range(5):

@@ -19,7 +19,7 @@ EVALUATION_COMPLETED = False
 import myosuite
 
 class evaluator_environment:
-    def __init__(self, environment="myoChallengeRelocateP1-v0"):
+    def __init__(self, environment="myoChallengeBimanual-v0"):
         self.score = 0
         self.feedback = None
         self.env = gym.make(environment)

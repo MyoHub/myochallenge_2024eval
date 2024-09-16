@@ -2,9 +2,9 @@
 This year's MyoChallenge consists of two independant tracks: Manipulation and locomotion.
 
 In order to create the environments, we can use OpenAI's gym interface, and import myosuite.
-It is required to install `myosuite==1.7.0` to run the tasks.
+It is required to install `myosuite==2.7.0` to run the tasks.
 
-Please note that the rewards given by the environments are NOT the final evaluation metrics, you have to find a good reward function by yourself. We refer to [evalai](https://eval.ai/web/challenges/challenge-page/2105/evaluation) for the evaluation details.
+Please note that the rewards given by the environments are NOT the final evaluation metrics, you have to find a good reward function by yourself. We refer to [evalai](https://eval.ai/web/challenges/challenge-page/2373/overview) for the evaluation details.
 
 You are also free to change observations, episode length and all kinds of details during training, but during evaluation everything will be fixed to the original environments. Make sure that you can recover your observation vector from the original observations or you cannot run your solution on the evaluation server!
 ## Manipulation track
@@ -15,7 +15,7 @@ This code snippet runs the manipulation track environment with a random agent. W
 import gym
 import myosuite 
 
-env = gym.make('myoChallengeRelocateP1-v0')
+env = gym.make('myoChallengeBimanual-v0')
 for ep in range(5):
     print(f'Episode: {ep} of 5')
     state = env.reset()
@@ -37,7 +37,7 @@ In addition to the publicly available task seen below, the locomotion track feat
 import gym
 import myosuite 
 
-env = gym.make('myoChallengeChaseTagP1-v0')
+env = gym.make('myoChallengeRunTrackP2-v0', normalize_act=False, reset_type='random')
 for ep in range(5):
     print(f'Episode: {ep} of 5')
     state = env.reset()

@@ -26,9 +26,6 @@ def unpack_for_grpc(entity):
     return pickle.loads(entity)
 
 
-str_test = 'July 13, 7:30AM' # <-- to be removed, only for testing
-
-
 stub = evaluation_pb2_grpc.EnvironmentStub(channel)
 
 
@@ -57,7 +54,7 @@ while not flag_completed:
     while not flag_trial :
 
         if counter == 0:
-            print('MANIPULATION : Start Resetting the environment and get 1st obs')
+            print('MANI-MPL : Start Resetting the environment and get 1st obs')
             obs = unpack_for_grpc(
             stub.reset(
                 evaluation_pb2.Package(SerializedEntity=pack_for_grpc(None))
@@ -78,6 +75,6 @@ while not flag_completed:
         flag_trial = base["feedback"][2]
         flag_completed = base["eval_completed"]
 
-        print(f"MANIPULATION : Random Agent Feedback iter {counter} -- solved: {flag_trial}")
+        print(f"MANI-MPL : Random Agent Feedback iter {counter} -- solved: {flag_trial}")
         print("*" * 100)
         counter +=1

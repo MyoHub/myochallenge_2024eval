@@ -54,7 +54,7 @@ while not flag_completed:
     while not flag_trial :
 
         if counter == 0:
-            print('CHASE-TAG : Start Resetting the environment and get 1st obs')
+            print('LOCO-OSL : Start Resetting the environment and get 1st obs')
             obs = unpack_for_grpc(
             stub.reset(
                 evaluation_pb2.Package(SerializedEntity=pack_for_grpc(None))
@@ -75,6 +75,6 @@ while not flag_completed:
         flag_trial = base["feedback"][2]
         flag_completed = base["eval_completed"]
 
-        print(f"CHASE-TAG : Random Agent Feedback iter {counter} -- solved: {flag_trial}")
+        print(f"LOCO-OSL : Random Agent Feedback iter {counter} -- solved: {flag_trial}")
         print("*" * 100)
         counter +=1

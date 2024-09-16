@@ -1,7 +1,7 @@
 import os
 import pickle
 import time
-from utils import RemoteConnection, DummyEnv
+from utils import RemoteConnection, DummyLocoEnv
 import numpy as np
 
 
@@ -14,19 +14,21 @@ def get_custom_observation(rc):
     """
     # example of obs_keys for deprl baseline
     obs_keys = [
+      'terrain',        
       'internal_qpos',
       'internal_qvel',
       'grf',
       'torso_angle',
-      'opponent_pose',
-      'opponent_vel',
+      'socket_force',
+      'torso_angle',
       'model_root_pos',
       'model_root_vel',
       'muscle_length',
       'muscle_velocity',
       'muscle_force',
+      'act',
+      'act_dot'
     ]
-    obs_keys.append('act')
 
     obs_dict = rc.get_obsdict()
     # add new features here that can be computed from obs_dict
@@ -56,8 +58,8 @@ rc.set_observation_space(shape)
 ## HERE an example from a previously trained policy with deprl is shown (see https://github.com/facebookresearch/myosuite/blob/main/docs/source/tutorials/4a_deprl.ipynb)
 ## additional dependencies such as gym and deprl might be needed
 import deprl
-policy = deprl.load_baseline(DummyEnv(env_name='myoChallengeChaseTagP1-v0', stub=rc))
-print('CHASE-TAG agent: policy loaded')
+policy = deprl.load_baseline(DummyLocoEnv(env_name='myoChallengeRunTrackP2-v0', stub=rc))
+print('LOCO-OSL agent: policy loaded')
 ################################################
 
 
@@ -71,7 +73,7 @@ while not flag_completed:
     while not flag_trial :
 
         if counter == 0:
-            print('CHASE-TAG: Trial #'+str(repetition)+'Start Resetting the environment and get 1st obs')
+            print('LOCO-OSL: Trial #'+str(repetition)+'Start Resetting the environment and get 1st obs')
             obs = rc.reset()
 
         ################################################
@@ -87,6 +89,6 @@ while not flag_completed:
         flag_trial = base["feedback"][2]
         flag_completed = base["eval_completed"]
 
-        print(f"CHASE-TAG: Agent Feedback iter {counter} -- trial solved: {flag_trial} -- task solved: {flag_completed}")
+        print(f"LOCO-OSL: Agent Feedback iter {counter} -- trial solved: {flag_trial} -- task solved: {flag_completed}")
         print("*" * 100)
         counter +=1

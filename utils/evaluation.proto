@@ -8,6 +8,9 @@ service Environment{
   rpc get_observation_space(Package) returns (Package) {}
   rpc get_obsdict(Package) returns (Package) {}
   rpc act_on_environment(Package) returns (Package) {}
+  rpc get_output_keys(Package) returns (Package) {}
+  rpc set_output_keys(Package) returns (Package) {}
+  rpc change_osl_mode(Package) returns (Package) {}
 }
 
 message Package{
