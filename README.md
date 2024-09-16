@@ -5,7 +5,7 @@
 # 2024 NeurIPS - MyoChallenge
 
 <p align="center">
-  <img src='./images/myochallenges_reverse.png' alt="teaser results" width="50%"/>
+  <img src='./images/myochallenges_reverse.png' alt="teaser results" width="75%"/>
   <p align="center"><i>MyoChallenge Tasks</i></p>
 </p>
 
@@ -32,7 +32,7 @@ Checkout our colab tutorial if you want detailed step-by-step instructions for t
 (detailed description [here](./tutorials/GHaction_Submission.md))
 1. [Register an account on Eval-AI](https://evalai.readthedocs.io/en/latest/participate.html) and obtain a `personal token` (on profile page -> "Get your Auth Token")
 2. [Clone this template](https://github.com/new?template_name=myoChallenge2024Eval&template_owner=MyoHub) and add the eval-ai `personal token` as "EvalAI_token" (in "Settings" -> "Secrets and variables" -> "Actions" -> "New repository secret")
-3. Trigger subission by selecting "Run workflow" in the ["Submission Loco Random" Action](https://github.com/MyoHub/myoChallenge2024Eval/actions/workflows/docker-submission_loco_random.yml)
+3. Trigger subission by selecting "Run workflow" in the ["Submission Loco Random" Action](https://github.com/MyoHub/myoChallenge2024Eval/actions/workflows/P2_docker-submission_loco_random.yml)
 
 To customize your solution, please follow the [steps listed below](#step-by-step) below.
 
