@@ -1,7 +1,7 @@
 import os
 import pickle
 import time
-from utils import RemoteConnection, DummyEnv
+from utils import RemoteConnection, DummyManiEnv
 import numpy as np
 
 
@@ -56,7 +56,7 @@ rc.set_observation_space(shape)
 ## HERE an example from a previously trained policy with deprl is shown (see https://github.com/facebookresearch/myosuite/blob/main/docs/source/tutorials/4a_deprl.ipynb)
 ## additional dependencies such as gym and deprl might be needed
 import deprl
-policy = deprl.load_baseline(DummyEnv(env_name='myoChallengeBimanual-v0', stub=rc))
+policy = deprl.load_baseline(DummyManiEnv(env_name='myoChallengeBimanual-v0', stub=rc))
 print('MANI-MPL agent: policy loaded')
 ################################################
 
