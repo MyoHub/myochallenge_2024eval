@@ -2,7 +2,7 @@ import pickle
 import evaluation_pb2
 import evaluation_pb2_grpc
 import grpc
-import gym
+import gymnasium as gym
 import numpy as np
 
 
@@ -17,6 +17,23 @@ class RemoteConnection():
 
     def unpack_for_grpc(self, entity):
         return pickle.loads(entity)
+
+    # def get_output_keys(self, request, context):
+    #     message = self.pack_for_grpc(self.stub.obs_keys)
+    #     return evaluation_pb2.Package(SerializedEntity=message)
+
+    def set_output_keys(self, new_out_keys):
+        # new_out_keys = self.unpack_for_grpc(request.SerializedEntity)
+
+        # message = self.pack_for_grpc(self.stub.set_output_keys(new_out_keys))
+
+        self.stub.set_output_keys(
+                evaluation_pb2.Package(SerializedEntity=self.pack_for_grpc(new_out_keys))
+            ).SerializedEntity
+
+        # Reconstruct action and obs space
+        self._construct_action_and_observation_space()
+
 
     def get_action_space(self):
         act_space = self.unpack_for_grpc(
@@ -91,6 +108,18 @@ class LocoRemoteConnection(RemoteConnection):
             ).SerializedEntity
             )
         return obs
+    
+    def _construct_action_and_observation_space(self):
+        """
+        Construct observation and action space to make the usage of popular RL frameworks easier.
+        """
+        action_len = self.get_action_space()
+        obs_len = self.get_observation_space()
+        self.observation_space = gym.spaces.Box(shape=(obs_len,), high=1e6, low=-1e6)
+        self.action_space = gym.spaces.Box(shape=(action_len,), high=1.0, low=0.0)
+
+    def change_osl_mode(self, mode):
+        self.stub.change_osl_mode(evaluation_pb2.Package(SerializedEntity=self.pack_for_grpc(mode)))
 
 class DummyLocoEnv:
     def __init__(self, env_name, stub):

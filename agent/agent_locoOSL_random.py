@@ -10,34 +10,33 @@ import evaluation_pb2_grpc
 import grpc
 import gymnasium as gym
 
+from utils import LocoRemoteConnection
+
+"""
+Define your custom observation keys here
+"""
+custom_obs_keys = [
+    'terrain',        
+    'internal_qpos',
+    'internal_qvel',
+    'grf',
+    'torso_angle',
+    'socket_force',
+    'torso_angle',
+    'model_root_pos',
+    'model_root_vel',
+    'muscle_length',
+    'muscle_velocity',
+    'muscle_force',
+    'act',
+    'act_dot',
+]
 
 def pack_for_grpc(entity):
     return pickle.dumps(entity)
 
 def unpack_for_grpc(entity):
     return pickle.loads(entity)
-
-class EnvShell:
-
-    def __init__(self, stub):
-
-        action_len = unpack_for_grpc(
-            stub.get_action_space(
-                evaluation_pb2.Package(SerializedEntity=pack_for_grpc(None))
-            ).SerializedEntity
-        )
-
-        obs_len = unpack_for_grpc(
-            stub.get_observation_space(
-                evaluation_pb2.Package(SerializedEntity=pack_for_grpc(None))
-            ).SerializedEntity
-        )
-        self.observation_space = gym.spaces.Box(shape=(obs_len,), high=1e6, low=-1e6)
-        self.action_space = gym.spaces.Box(shape=(action_len,), high=1.0, low=0.0)
-        print("Action Space", self.action_space)
-        print("Observation Space", self.observation_space)
-        # TODO case for remapping of [-1 1] -> [0 1]
-
 
 class Policy:
 
@@ -46,6 +45,20 @@ class Policy:
 
     def __call__(self, env):
         return self.action_space.sample()
+
+def get_custom_observation(rc, obs_keys):
+    """
+    Use this function to create an observation vector from the 
+    environment provided observation dict for your own policy.
+    By using the same keys as in your local training, you can ensure that 
+    your observation still works.
+    """
+
+    obs_dict = rc.get_obsdict()
+    # add new features here that can be computed from obs_dict
+    # obs_dict['qpos_without_xy'] = np.array(obs_dict['internal_qpos'][2:35].copy())
+
+    return rc.obsdict2obsvec(obs_dict, obs_keys)
 
 def generateDict():
     """
@@ -106,8 +119,6 @@ def generateDict():
         OSL_PARAM_LIST[idx] = {}
         OSL_PARAM_LIST[idx] = copy.deepcopy(temp_dict)
 
-    # OSL_PARAM_LIST[1]['e_stance']['gain']['knee_stiffness'] = 1000
-
     return OSL_PARAM_LIST
 
 
@@ -116,59 +127,72 @@ time.sleep(60)
 LOCAL_EVALUATION = os.environ.get("LOCAL_EVALUATION")
 
 if LOCAL_EVALUATION:
-    channel = grpc.insecure_channel("environment:8086")
+    rc = LocoRemoteConnection("environment:8086")
 else:
-    channel = grpc.insecure_channel("localhost:8086")
+    rc = LocoRemoteConnection("localhost:8086")
 
-stub = evaluation_pb2_grpc.EnvironmentStub(channel)
-env_shell = EnvShell(stub)
-# policy = deprl.load_baseline(env_shell)
-policy = Policy(env_shell)
+# if LOCAL_EVALUATION:
+#     channel = grpc.insecure_channel("environment:8086")
+# else:
+#     channel = grpc.insecure_channel("localhost:8086")
+
+# stub = evaluation_pb2_grpc.EnvironmentStub(channel)
+# env_shell = EnvShell(stub)
+policy = Policy(rc)
 
 osl_dict = generateDict() # Small test for agent
+
+# compute correct observation space using the custom keys
+shape = get_custom_observation(rc, custom_obs_keys).shape
+rc.set_output_keys(custom_obs_keys)
 
 flat_completed = None
 trial = 0
 while not flat_completed:
+    flag_trial = None # this flag will detect the end of an episode/trial
     ret = 0
-    print(f"LocoOSL: Start Resetting the environment and get 1st obs of iter {trial}")
-    
-    obs = unpack_for_grpc(
-        stub.reset(
-            evaluation_pb2.Package(SerializedEntity=pack_for_grpc(osl_dict))
-        ).SerializedEntity
-    )
 
+    print(f"LOCO-OSL: Start Resetting the environment and get 1st obs of iter {trial}")
+    
+    obs = rc.reset(osl_dict)
+
+    # obs = unpack_for_grpc(
+    #     stub.reset(
+    #         evaluation_pb2.Package(SerializedEntity=pack_for_grpc(osl_dict))
+    #     ).SerializedEntity
+    # )
+
+    """
+    Example of changing the OSL parameter set for the episode
+    """
     if trial == 0:
         mode = np.array([0])
     else:
         mode = np.array([1])
-    
-    stub.change_osl_mode(
-        evaluation_pb2.Package(SerializedEntity=pack_for_grpc(mode))
-    ).SerializedEntity
 
-    flag_trial = None
+    rc.change_osl_mode(mode)
+
+    # stub.change_osl_mode(
+    #     evaluation_pb2.Package(SerializedEntity=pack_for_grpc(mode))
+    # ).SerializedEntity
+
+
+    print(f"Trial: {trial}, flat_completed: {flat_completed}")
     counter = 0
-    for t in range(1000):
-        print(
-            f"Trial: {trial}, Iteration: {counter} flag_trial: {flag_trial} flat_completed: {flat_completed}"
-        )
+    while not flag_trial:
 
-        action = env_shell.action_space.sample()
-        base = unpack_for_grpc(
-            stub.act_on_environment(
-                evaluation_pb2.Package(SerializedEntity=pack_for_grpc(action))
-            ).SerializedEntity
-        )
-        print(f" \t \t after step: {base['feedback'][1:4]}")
+        ################################################
+        ## Replace with your trained policy.
+        action = rc.action_space.sample()
+        ################################################
+
+        base = rc.act_on_environment(action)
+
         obs = base["feedback"][0]
         flag_trial = base["feedback"][2]
         flat_completed = base["eval_completed"]
         ret += base["feedback"][1]
-        print(
-            f" \t \t after step: flag_trial: {flag_trial} flat_completed: {flat_completed}"
-        )
+
         if flag_trial:
             print(f"Return was {ret}")
             print("*" * 100)

@@ -22,7 +22,15 @@ class evaluator_environment:
     def __init__(self, environment="myoChallengeRunTrackP2-v0"):
         self.score = 0
         self.feedback = None
+        self.environment = environment
         self.env = gym.make(environment)
+
+    def get_output_keys(self):
+        print(self.env.obs_keys)
+        return self.env.obs_keys
+
+    def set_output_keys(self, key_set):
+        self.env = gym.make(self.environment, obs_keys=key_set)
 
     def reset(self, reset_dict=None):
         return self.env.reset(OSL_params=reset_dict)
@@ -51,6 +59,11 @@ class Environment(evaluation_pb2_grpc.EnvironmentServicer):
         self.server = server
         self.iter = 0
         self.repetition = 0
+
+    def set_output_keys(self, request, context):
+        new_out_keys = unpack_for_grpc(request.SerializedEntity)
+        message = pack_for_grpc(env.set_output_keys(new_out_keys))
+        return evaluation_pb2.Package(SerializedEntity=message)
 
     def reset(self, request, context):
         reset_dict = unpack_for_grpc(request.SerializedEntity)

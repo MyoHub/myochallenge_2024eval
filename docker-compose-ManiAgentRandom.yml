@@ -7,4 +7,4 @@ services:
       - docker/agent/docker.env
     build:
       context: ./
-      dockerfile: docker/agent/Dockerfile_Mani_Random
+      dockerfile: docker/agent/Dockerfile_AgentManiMPL_random
