@@ -49,6 +49,11 @@ class EnvironmentStub(object):
                 request_serializer=evaluation__pb2.Package.SerializeToString,
                 response_deserializer=evaluation__pb2.Package.FromString,
                 )
+        self.set_environment_keys = channel.unary_unary(
+                '/evaluation.Environment/set_environment_keys',
+                request_serializer=evaluation__pb2.Package.SerializeToString,
+                response_deserializer=evaluation__pb2.Package.FromString,
+                )
         self.change_osl_mode = channel.unary_unary(
                 '/evaluation.Environment/change_osl_mode',
                 request_serializer=evaluation__pb2.Package.SerializeToString,
@@ -101,6 +106,12 @@ class EnvironmentServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def set_environment_keys(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def change_osl_mode(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -142,6 +153,11 @@ def add_EnvironmentServicer_to_server(servicer, server):
             ),
             'set_output_keys': grpc.unary_unary_rpc_method_handler(
                     servicer.set_output_keys,
+                    request_deserializer=evaluation__pb2.Package.FromString,
+                    response_serializer=evaluation__pb2.Package.SerializeToString,
+            ),
+            'set_environment_keys': grpc.unary_unary_rpc_method_handler(
+                    servicer.set_environment_keys,
                     request_deserializer=evaluation__pb2.Package.FromString,
                     response_serializer=evaluation__pb2.Package.SerializeToString,
             ),
@@ -274,6 +290,23 @@ class Environment(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/evaluation.Environment/set_output_keys',
+            evaluation__pb2.Package.SerializeToString,
+            evaluation__pb2.Package.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def set_environment_keys(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/evaluation.Environment/set_environment_keys',
             evaluation__pb2.Package.SerializeToString,
             evaluation__pb2.Package.FromString,
             options, channel_credentials,

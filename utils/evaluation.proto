@@ -10,6 +10,7 @@ service Environment{
   rpc act_on_environment(Package) returns (Package) {}
   rpc get_output_keys(Package) returns (Package) {}
   rpc set_output_keys(Package) returns (Package) {}
+  rpc set_environment_keys(Package) returns (Package) {}
   rpc change_osl_mode(Package) returns (Package) {}
 }
 

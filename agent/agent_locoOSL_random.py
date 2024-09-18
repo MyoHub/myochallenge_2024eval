@@ -62,7 +62,8 @@ def get_custom_observation(rc, obs_keys):
 
 def generateDict():
     """
-    Example function to generate the dictionary for the
+    Example function to generate a default dictionary for the OSL state machine variables
+    All values here are editable.
     """
     BODY_WEIGHT = 78.6689 * 9.81 # Total body mass (incl. OSL leg) * gravity
 
@@ -122,7 +123,7 @@ def generateDict():
     return OSL_PARAM_LIST
 
 
-time.sleep(60)
+time.sleep(60) # DO NOT REMOVE. Required for EvalAI processing
 
 LOCAL_EVALUATION = os.environ.get("LOCAL_EVALUATION")
 
@@ -131,20 +132,30 @@ if LOCAL_EVALUATION:
 else:
     rc = LocoRemoteConnection("localhost:8086")
 
-# if LOCAL_EVALUATION:
-#     channel = grpc.insecure_channel("environment:8086")
-# else:
-#     channel = grpc.insecure_channel("localhost:8086")
-
-# stub = evaluation_pb2_grpc.EnvironmentStub(channel)
-# env_shell = EnvShell(stub)
 policy = Policy(rc)
 
-osl_dict = generateDict() # Small test for agent
+osl_dict = generateDict() # Generate a default OSL parameter set here.
 
-# compute correct observation space using the custom keys
-shape = get_custom_observation(rc, custom_obs_keys).shape
-rc.set_output_keys(custom_obs_keys)
+################################################
+# Environment customization options
+# Your team will be provided limited options for environment customization
+# Note that these customization only affects how you control you agent, and will NOT affect the task in the challenge.
+
+# 1. Observation keys: 
+# - You can define keys here to extract the observations you want.
+# - Note that you can only pick obs keys from the full list defined here: https://github.com/MyoHub/myosuite/blob/main/myosuite/envs/myo/myochallenge/run_track_v0.py#L137
+
+# 2. Action normalization
+# - For ML based learning, action spaces are typically kept symmetrical (i.e. from -1 to 1), and this is the defaulf setting of the challenge environment
+# - Understandably, this might cause confusion for non-ML participants, who are more used to the convention that muscle ctrl actions are within [0, 1].
+# - Hence, there is an option to set the muscle actions to [0, 1], and is achieved by setting the flag, normalize_act to False.
+
+# Preparing the dictionary of environment keys
+custom_environment_varibles = {'obs_keys':custom_obs_keys, 'normalize_act':True}
+
+# Setting the keys to the environment
+rc.set_environment_keys(custom_environment_varibles)
+################################################
 
 flat_completed = None
 trial = 0
@@ -155,27 +166,21 @@ while not flat_completed:
     print(f"LOCO-OSL: Start Resetting the environment and get 1st obs of iter {trial}")
     
     obs = rc.reset(osl_dict)
+    obs = get_custom_observation(rc, custom_obs_keys)
 
-    # obs = unpack_for_grpc(
-    #     stub.reset(
-    #         evaluation_pb2.Package(SerializedEntity=pack_for_grpc(osl_dict))
-    #     ).SerializedEntity
-    # )
+    ################################################
+    # Example of changing the OSL parameter set for the episode
+    # the function change_osl_mode allows you to switch between the paramter sets
+    # Your team is provided with 4 sets of OSL state machine paramters, which can be switched with the function below
+    # You are free to decide when to switch parameter sets,
 
-    """
-    Example of changing the OSL parameter set for the episode
-    """
     if trial == 0:
         mode = np.array([0])
     else:
         mode = np.array([1])
 
     rc.change_osl_mode(mode)
-
-    # stub.change_osl_mode(
-    #     evaluation_pb2.Package(SerializedEntity=pack_for_grpc(mode))
-    # ).SerializedEntity
-
+    ################################################
 
     print(f"Trial: {trial}, flat_completed: {flat_completed}")
     counter = 0
@@ -188,7 +193,12 @@ while not flat_completed:
 
         base = rc.act_on_environment(action)
 
-        obs = base["feedback"][0]
+        # Get the observations you used here
+        obs = get_custom_observation(rc, custom_obs_keys)
+
+        #obs = base["feedback"][0]
+
+
         flag_trial = base["feedback"][2]
         flat_completed = base["eval_completed"]
         ret += base["feedback"][1]

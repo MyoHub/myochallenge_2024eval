@@ -19,11 +19,32 @@ EVALUATION_COMPLETED = False
 import myosuite
 
 class evaluator_environment:
+
+    # Defaults from MyoChallenge environment 2024
+    DEFAULT_OBS_KEYS = [
+        'internal_qpos',
+        'internal_qvel',
+        'grf',
+        'torso_angle',
+        'model_root_pos',
+        'model_root_vel',
+        'muscle_length',
+        'muscle_velocity',
+        'muscle_force',
+    ]
+    DEFAULT_NORMALIZE_ACT = True
+
     def __init__(self, environment="myoChallengeRunTrackP2-v0"):
         self.score = 0
         self.feedback = None
+
+        self.obs_output_keys = self.DEFAULT_OBS_KEYS
+        self.normalize_act = self.DEFAULT_NORMALIZE_ACT
+
         self.environment = environment
-        self.env = gym.make(environment)
+        self.env = gym.make(self.environment, 
+                            obs_keys=self.obs_output_keys, 
+                            normalize_act=self.normalize_act) 
 
     def get_output_keys(self):
         print(self.env.obs_keys)
@@ -31,6 +52,16 @@ class evaluator_environment:
 
     def set_output_keys(self, key_set):
         self.env = gym.make(self.environment, obs_keys=key_set)
+
+    def set_environment_keys(self, key_set):
+        self.obs_output_keys = key_set['obs_keys'] # List
+        self.normalize_act = key_set['normalize_act']
+        self._reInitEnvironment()
+
+    def _reInitEnvironment(self):
+        self.env = gym.make(self.environment, 
+                            obs_keys=self.obs_output_keys, 
+                            normalize_act=self.normalize_act)
 
     def reset(self, reset_dict=None):
         return self.env.reset(OSL_params=reset_dict)
@@ -63,6 +94,11 @@ class Environment(evaluation_pb2_grpc.EnvironmentServicer):
     def set_output_keys(self, request, context):
         new_out_keys = unpack_for_grpc(request.SerializedEntity)
         message = pack_for_grpc(env.set_output_keys(new_out_keys))
+        return evaluation_pb2.Package(SerializedEntity=message)
+
+    def set_environment_keys(self, request, context):
+        new_env_keys = unpack_for_grpc(request.SerializedEntity)
+        message = pack_for_grpc(env.set_environment_keys(new_env_keys))
         return evaluation_pb2.Package(SerializedEntity=message)
 
     def reset(self, request, context):

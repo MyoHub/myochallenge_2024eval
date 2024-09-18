@@ -22,6 +22,13 @@ class RemoteConnection():
     #     message = self.pack_for_grpc(self.stub.obs_keys)
     #     return evaluation_pb2.Package(SerializedEntity=message)
 
+    def set_environment_keys(self, new_env_keys):
+        self.stub.set_environment_keys(
+                evaluation_pb2.Package(SerializedEntity=self.pack_for_grpc(new_env_keys))
+            ).SerializedEntity
+        # Reconstruct action and obs space
+        self._construct_action_and_observation_space()
+
     def set_output_keys(self, new_out_keys):
         # new_out_keys = self.unpack_for_grpc(request.SerializedEntity)
 
