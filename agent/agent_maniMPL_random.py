@@ -16,6 +16,7 @@ from utils import RemoteConnection
 Define your custom observation keys here
 """
 custom_obs_keys = [
+    "time", 
     'myohand_qpos',
     'myohand_qvel',
     'pros_hand_qpos',
@@ -28,6 +29,7 @@ custom_obs_keys = [
     'reach_err',
     'pass_err',
     'act',
+    "touching_body",
 ]
 
 def pack_for_grpc(entity):
