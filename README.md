@@ -17,7 +17,7 @@ This challenge consists of developing controllers for a physiologically realisti
 
 - B) **Locomotion/Chase-Tag task** -- Chase an opponent (`myoChallengeRunTrackP2-v0`).
 
-[⚠️ Important!] For Phase 2 environment, please upgrade to MyoSuite >= 2.1.3
+[⚠️ Important!] For Phase 2 environment, please upgrade to MyoSuite >= 2.8.0
 
 ## Overview
 This repository is primarily centered around the submission of your solution, but we also created documentation to help you with:
@@ -26,7 +26,6 @@ This repository is primarily centered around the submission of your solution, bu
 * Train an agent: We provide support for [stable-baselines](https://stable-baselines3.readthedocs.io/en/master/) and for [deprl](https://github.com/martius-lab/depRL) policies. Check out the respective documentation to train an agent.
 * Get ready for submission: We offer 2 approaches, [GitHub actions](#github-actions) or [DIY Submission](#diy-submission).
 
-Checkout our colab tutorial if you want detailed step-by-step instructions for the entire process: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Az9B0tOJmm962v1PjjRUTEQGCY5ebqQG)
 
 ### Github actions 
 (detailed description [here](./tutorials/GHaction_Submission.md))
