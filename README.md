@@ -15,7 +15,7 @@ This challenge consists of developing controllers for a physiologically realisti
 
 - A) **Manipulation task** -- Interact with an object and relocate it (`myoChallengeBimanual-v0`).
 
-- B) **Locomotion/Move with prosthetic task** -- Walk/Run over different terrain with a prosthetic leg (`myoChallengeOslRunRandom-v0`).
+- B) **Locomotion task** -- Walk/Run over different terrain with a prosthetic leg (`myoChallengeOslRunRandom-v0`).
 
 [⚠️ Important!] For Phase 2 environment, please upgrade to MyoSuite >= 2.8.0
 
