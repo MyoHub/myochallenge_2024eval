@@ -29,7 +29,6 @@ custom_obs_keys = [
     'muscle_velocity',
     'muscle_force',
     'act',
-    'act_dot',
 ]
 
 def pack_for_grpc(entity):
