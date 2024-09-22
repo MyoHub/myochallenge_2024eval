@@ -22,7 +22,6 @@ custom_obs_keys = [
     'grf',
     'torso_angle',
     'socket_force',
-    'torso_angle',
     'model_root_pos',
     'model_root_vel',
     'muscle_length',
