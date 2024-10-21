@@ -7,6 +7,10 @@ We created a repository template (the one you're reading right now) which you ca
 after which you can then setup your evalai account and use it to automatically submit your solutions, 
 so you don't have to mess around with docker containers.
 
+
+You can also follow the instructions here: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/11vRvWMWykNrd_5ViJVGdLXz2pnbc5QEs?usp=sharing)
+
+
 ## How to set-up a repo for submssion with GH-actions
 
 ### On the eval-ai website
