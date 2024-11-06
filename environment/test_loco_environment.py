@@ -34,7 +34,7 @@ class evaluator_environment:
     ]
     DEFAULT_NORMALIZE_ACT = True
 
-    def __init__(self, environment="myoChallengeRunTrackP2-v0"):
+    def __init__(self, environment="myoChallengeOslRunFixed-v0"):
         self.score = 0
         self.feedback = None
 
